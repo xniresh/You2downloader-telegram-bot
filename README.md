@@ -38,7 +38,7 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/tu-usuario/YTDown-Telegram.git
+   git clone https://github.com/xniresh/You2downloader-telegram-bot.git
    cd YTDown-Telegram
    ```
 
