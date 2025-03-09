@@ -1,0 +1,49 @@
+services:
+  bot:
+    # Build configuration for development mode
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    # Production mode using DockerHub image
+    image: xlokius/youtube-bot-downloader
+    container_name: youtube-dl-bot
+    restart: unless-stopped
+    environment:
+      - TZ=America/Lima
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    volumes:
+      - ./cookies:/app/cookies
+    depends_on:
+      - telegram-api
+    networks:
+      - bot-network
+  
+  telegram-api:
+    image: aiogram/telegram-bot-api:latest
+    container_name: telegram-api-server
+    restart: unless-stopped
+    environment:
+      - TELEGRAM_API_ID=${TELEGRAM_API_ID}
+      - TELEGRAM_API_HASH=${TELEGRAM_API_HASH}
+    volumes:
+      - telegram-api-data:/var/lib/telegram-bot-api
+    ports:
+      - "8081:8081"
+    command: >
+      --local
+      --verbosity=2
+      --api-id=${TELEGRAM_API_ID}
+      --api-hash=${TELEGRAM_API_HASH}
+      --dir=/var/lib/telegram-bot-api
+      --temp-dir=/tmp/telegram-bot-api
+      --http-port=8081
+      --log-stderr
+    networks:
+      - bot-network
+
+networks:
+  bot-network:
+    driver: bridge
+
+volumes:
+  telegram-api-data:
