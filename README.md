@@ -6,8 +6,8 @@ You2downloader es un bot de Telegram modular que permite a los usuarios descarga
 
 ## Características
 
-- Descarga de videos de YouTube en la mejor calidad disponible
-- Extracción de audio en formato MP3 con metadatos y carátula
+- Descarga de videos de YouTube con selección de calidad (desde 1080p+ hasta 360p)
+- Extracción de audio en formato MP3 con metadatos, carátula y calidad configurable (96-320kbps)
 - Interfaz conversacional intuitiva mediante botones
 - Indicador de progreso optimizado durante la descarga
 - Soporte para cookies para acceder a contenido con restricciones
@@ -79,7 +79,8 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
 2. Envía el comando `/start` para recibir instrucciones
 3. Envía la URL de un video de YouTube
 4. Selecciona si deseas descargar el video o extraer el audio
-5. Espera a que el bot procese y envíe el archivo (verás actualizaciones de progreso)
+5. Elige la calidad que prefieres para el formato seleccionado
+6. Espera a que el bot procese y envíe el archivo (verás actualizaciones de progreso)
 
 ## Estructura del proyecto
 
@@ -116,6 +117,11 @@ El Dockerfile ha sido optimizado usando multi-stage build para:
 
 ### 3. Rate Limiting para Actualizaciones de Progreso
 Se ha implementado un sistema de limitación de frecuencia para las actualizaciones de progreso, evitando timeouts en la API de Telegram y mejorando la estabilidad del bot.
+
+### 4. Selección de Calidad de Descarga
+Se ha añadido la posibilidad de seleccionar la calidad deseada tanto para videos como para audios:
+- **Videos**: Opciones desde máxima calidad (1080p+) hasta calidad baja (360p)
+- **Audios**: Opciones desde alta fidelidad (320kbps) hasta calidad ligera (96kbps)
 
 ## Solución de problemas
 
