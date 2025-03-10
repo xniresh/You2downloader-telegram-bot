@@ -1,23 +1,24 @@
-# YTDown-Telegram Bot
+# You2downloader - Bot de Telegram
 
 ## Descripción
 
-YTDown-Telegram es un bot de Telegram que permite a los usuarios descargar videos o extraer audio de YT de manera sencilla.
+You2downloader es un bot de Telegram modular que permite a los usuarios descargar videos o extraer audio de YouTube de manera sencilla y eficiente.
 
 ## Características
 
 - Descarga de videos de YouTube en la mejor calidad disponible
 - Extracción de audio en formato MP3 con metadatos y carátula
 - Interfaz conversacional intuitiva mediante botones
-- Indicador de progreso durante la descarga (falta mejorar - sigue en fase de prueba)
-- Soporte para cookies (falta mejorar - sigue en fase de prueba)
-- Implementación en contenedores Docker para fácil despliegue
+- Indicador de progreso optimizado durante la descarga
+- Soporte para cookies para acceder a contenido con restricciones
+- Implementación en contenedores Docker con multi-stage build para despliegue eficiente
+- Arquitectura modular para mejor mantenimiento y extensibilidad
 
 ## Requisitos
 
 - Python 3.9 o superior (solo si quieres correrlo en local)
 - API de Telegram (ID de API, Hash de API y Token de Bot)
-- Docker y Docker Compose (para despliegue en contenedores)
+- Docker y Docker Compose (para despliegue en contenedores, recomendado)
 - ffmpeg (para procesamiento de audio)
 
 ## Instalación
@@ -39,7 +40,7 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
 1. Clona el repositorio:
    ```bash
    git clone https://github.com/xniresh/You2downloader-telegram-bot.git
-   cd YTDown-Telegram
+   cd You2downloader-telegram-bot
    ```
 
 2. Crea un entorno virtual e instala las dependencias:
@@ -57,9 +58,9 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
    ```bash
    python app.py
    ```
- NOTA: Es mejor probarlo en local mediante docker para evitar instalaciones innecesarias en el sistema.
+**NOTA**: Es mejor probarlo mediante Docker para evitar instalaciones innecesarias en el sistema.
 
-### Despliegue con Docker (producción)
+### Despliegue con Docker (recomendado)
 
 1. Asegúrate de tener Docker y Docker Compose instalados
 
@@ -70,7 +71,7 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
 
    Esto iniciará dos contenedores:
    - Un servidor local de la API de Telegram
-   - El bot de YouTube Downloader
+   - El bot de YouTube Downloader (con imagen optimizada mediante multi-stage build)
 
 ## Uso
 
@@ -78,21 +79,43 @@ Puedes obtener estas credenciales en [my.telegram.org](https://my.telegram.org) 
 2. Envía el comando `/start` para recibir instrucciones
 3. Envía la URL de un video de YouTube
 4. Selecciona si deseas descargar el video o extraer el audio
-5. Espera a que el bot procese y envíe el archivo
+5. Espera a que el bot procese y envíe el archivo (verás actualizaciones de progreso)
 
 ## Estructura del proyecto
 
 ```
-YTDown-Telegram/
-├── app.py              # Código principal del bot
-├── requirements.txt    # Dependencias del proyecto
-├── Dockerfile          # Configuración para construir la imagen Docker
-├── docker-compose.yml  # Configuración para desplegar con Docker Compose
-├── .env                # Variables de entorno (no incluido en el repositorio)
-├── cookies/            # Directorio para almacenar cookies
-│   └── cookies.txt     # Archivo de cookies para YouTube
-└── .gitignore         # Archivos y directorios ignorados por git
+You2downloader-telegram-bot/
+├── app.py                # Punto de entrada principal de la aplicación
+├── config.py              # Configuraciones centralizadas
+├── telegram_interface.py   # Módulo para interacción con Telegram
+├── youtube_downloader.py  # Módulo para descargas de YouTube
+├── media_processor.py     # Módulo para procesamiento de archivos multimedia
+├── requirements.txt       # Dependencias del proyecto
+├── Dockerfile             # Configuración optimizada con multi-stage build
+├── docker-compose.yml     # Configuración para desplegar con Docker Compose
+├── .env                   # Variables de entorno (no incluido en el repositorio)
+├── cookies/               # Directorio para almacenar cookies
+│   └── cookies.txt        # Archivo de cookies para YouTube
+└── .gitignore            # Archivos y directorios ignorados por git
 ```
+
+## Mejoras recientes
+
+### 1. Arquitectura Modular
+Se ha refactorizado el código para seguir una estructura modular con separación clara de responsabilidades:
+- `telegram_interface.py`: Maneja la interacción con Telegram
+- `youtube_downloader.py`: Lógica de descarga de YouTube
+- `media_processor.py`: Procesamiento de archivos multimedia
+- `config.py`: Centraliza la configuración
+
+### 2. Optimización de Docker con Multi-stage Build
+El Dockerfile ha sido optimizado usando multi-stage build para:
+- Reducir significativamente el tamaño de la imagen final
+- Mejorar la seguridad ejecutando como usuario no privilegiado
+- Optimizar la estructura de capas para builds más rápidos
+
+### 3. Rate Limiting para Actualizaciones de Progreso
+Se ha implementado un sistema de limitación de frecuencia para las actualizaciones de progreso, evitando timeouts en la API de Telegram y mejorando la estabilidad del bot.
 
 ## Solución de problemas
 
@@ -107,5 +130,9 @@ YTDown-Telegram/
 - Si hay restricciones de edad, configura correctamente el archivo de cookies
 
 ### Error al enviar archivos grandes
-- Telegram tiene un límite de 50MB para bots pero con el telegram api server configurado en el docker compose no deberia haber problemas con enviar hasta 2GB.
-- Para videos más grandes, considera usar la opción de audio
+- Telegram tiene un límite de 50MB para bots, pero con el servidor API de Telegram configurado en el docker-compose se pueden enviar archivos de hasta 2GB
+- Para videos muy grandes, considera usar la opción de audio
+
+### Timeouts en la API de Telegram
+- Se ha implementado un sistema de rate limiting para evitar este problema
+- Si persiste, verifica la conexión de red y los logs para más detalles
