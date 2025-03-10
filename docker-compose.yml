@@ -1,11 +1,11 @@
 services:
   bot:
     # Build configuration for development mode
-    # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     # Production mode using DockerHub image
-    image: xlokius/youtube-bot-downloader
+    #image: xlokius/youtube-bot-downloader
     container_name: youtube-dl-bot
     restart: unless-stopped
     environment:
