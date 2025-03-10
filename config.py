@@ -11,5 +11,5 @@ TELEGRAM_API_HASH = os.environ.get('TELEGRAM_API_HASH')
 TELEGRAM_API_BASE_URL = 'http://telegram-api:8081/bot'  # URL base con /bot al final
 
 # Configuración de descargas
-DEFAULT_AUDIO_QUALITY = '192'  # Calidad de audio predeterminada
+DEFAULT_AUDIO_QUALITY = '256'  # Calidad de audio predeterminada
 DEFAULT_VIDEO_FORMAT = 'best'  # Formato de video predeterminado

@@ -77,13 +77,14 @@ def progress_hook(d, update, context):
             logger.warning(f"Error al actualizar mensaje de finalización: {e}")
 
 # Función para descargar video
-async def download_video(url, update, context):
-    # Configuración para video
+async def download_video(url, update, context, format_option=None):
+    # Configuración para video - usando el formato especificado o el predeterminado
     ydl_opts = {
-        'format': 'best',
+        'format': format_option or 'bestvideo+bestaudio/best',  # Usar formato especificado o el predeterminado
         'outtmpl': '%(title)s.%(ext)s',
         'cookiefile': config.COOKIES_PATH,
         'progress_hooks': [lambda d: progress_hook(d, update, context)],
+        'merge_output_format': 'mp4',  # Asegurar que el formato de salida sea mp4
     }
     
     file_path = None
@@ -110,7 +111,7 @@ async def download_video(url, update, context):
             os.remove(file_path)
 
 # Función para descargar audio
-async def download_audio(url, update, context):
+async def download_audio(url, update, context, audio_quality=None):
     # Configuración para audio
     ydl_opts = {
         'format': 'bestaudio/best',
@@ -118,7 +119,7 @@ async def download_audio(url, update, context):
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
-            'preferredquality': '192',
+            'preferredquality': audio_quality or config.DEFAULT_AUDIO_QUALITY,  # Usar calidad especificada o predeterminada
         }],
         'writethumbnail': True,
         'cookiefile': config.COOKIES_PATH,
